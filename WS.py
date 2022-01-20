@@ -2,6 +2,9 @@ import function.get_data_mongo
 import function.pkl_input
 import logging
 stopword = function.pkl_input.open_pkl("StopWords.pkl")
+stopword = list(stopword)
+stopword.append("⋯")
+
 from ckiptagger import data_utils, construct_dictionary, WS
 
 FORMAT = '%(asctime)s %(levelname)s: %(message)s'
@@ -20,25 +23,16 @@ def de_stopword(old_list):
 ws = WS("./data")
 ws_data = []
 for i in all:
-    ws_data.append(list(i)[0])
+    ws_data.append(list(i)[0].replace("\u3000",""))
 word_sentence_list = ws(
     ws_data,
+    segment_delimiter_set = {",", "。", ":", "?", "!", ";","／",":","："},
 )
-for i in word_sentence_list:
-    print(i)
-
-# count = 0
-# for i in all:
-#     temp = []
-#     # print(i)
-#     word_sentence_list = ws(
-#         [list(i)[0]],
-#     )
-#     temp.extend([list(i)[1],list(i)[0],word_sentence_list])
-#     ws_data.append(temp)
-#     if count % 1000 == 0:
-#         logging.info(f"{count}")
-#     count += 1
-# del ws
-# for i in ws_data:
+# for i in word_sentence_list:
 #     print(i)
+new_data = de_stopword(word_sentence_list)
+# for i in new_data:
+#     print(i)
+import pickle
+with open("new.pkl","wb") as fileobj:
+    pickle.dump(new_data, fileobj)

@@ -11,3 +11,7 @@ def read_to_txt(pkl,file_name):
     with open(file_name,"w") as file:
         for i in sorted:
             file.write(f"{i}\n")
+def save_to_pkl(item,file_name):
+    import pickle
+    with open(file_name, 'w') as fp:
+        pickle.dump(item,fp)
